@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Timer</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		:root {
+			--bg-1: #08111f;
+			--bg-2: #101c33;
+			--card: rgba(8, 17, 31, 0.82);
+			--card-border: rgba(148, 163, 184, 0.22);
+			--text: #e5eefb;
+			--muted: #9db0ca;
+			--accent: #38bdf8;
+			--accent-2: #2563eb;
+			--danger: #fb7185;
+			--success: #34d399;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+			color: var(--text);
+			background:
+				radial-gradient(circle at top left, rgba(56, 189, 248, 0.24), transparent 35%),
+				radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.28), transparent 28%),
+				linear-gradient(135deg, var(--bg-1), var(--bg-2));
+		}
+
+		.page {
+			min-height: 100vh;
+			display: grid;
+			place-items: center;
+			padding: 24px;
+		}
+
+		.card {
+			width: min(100%, 620px);
+			padding: 28px;
+			border-radius: 28px;
+			background: var(--card);
+			border: 1px solid var(--card-border);
+			box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+			backdrop-filter: blur(14px);
+		}
+
+		.header {
+			display: flex;
+			justify-content: space-between;
+			gap: 16px;
+			align-items: flex-start;
+			margin-bottom: 24px;
+		}
+
+		.badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 12px;
+			border-radius: 999px;
+			background: rgba(56, 189, 248, 0.14);
+			color: #7dd3fc;
+			font-size: 12px;
+			letter-spacing: 0.14em;
+			text-transform: uppercase;
+		}
+
+		h1 {
+			margin: 10px 0 8px;
+			font-size: clamp(2rem, 5vw, 3.5rem);
+			line-height: 1.05;
+		}
+
+		p {
+			margin: 0;
+			color: var(--muted);
+			line-height: 1.7;
+		}
+
+		.timer-shell {
+			display: grid;
+			grid-template-columns: 1.2fr 0.8fr;
+			gap: 24px;
+			align-items: center;
+		}
+
+		.display-wrap {
+			position: relative;
+			aspect-ratio: 1;
+			border-radius: 28px;
+			padding: 18px;
+			background: linear-gradient(180deg, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.45));
+			border: 1px solid rgba(148, 163, 184, 0.18);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+		}
+
+		.ring {
+			position: absolute;
+			inset: 18px;
+			border-radius: 50%;
+			background: conic-gradient(var(--accent) 0deg, var(--accent-2) 0deg, rgba(148, 163, 184, 0.16) 0deg);
+			filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.2));
+		}
+
+		.ring::after {
+			content: "";
+			position: absolute;
+			inset: 18px;
+			border-radius: 50%;
+			background: linear-gradient(180deg, rgba(8, 17, 31, 0.92), rgba(15, 23, 42, 0.94));
+		}
+
+		.time-display {
+			position: absolute;
+			inset: 0;
+			display: grid;
+			place-items: center;
+			text-align: center;
+			padding: 24px;
+		}
+
+		.time-display strong {
+			display: block;
+			font-size: clamp(2.6rem, 9vw, 5.4rem);
+			letter-spacing: 0.05em;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.time-display span {
+			margin-top: 8px;
+			color: var(--muted);
+			font-size: 14px;
+			text-transform: uppercase;
+			letter-spacing: 0.2em;
+		}
+
+		.controls {
+			display: grid;
+			gap: 14px;
+		}
+
+		.input-row {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.field {
+			display: grid;
+			gap: 8px;
+		}
+
+		label {
+			font-size: 14px;
+			color: #c7d2e5;
+		}
+
+		input {
+			width: 100%;
+			padding: 14px 16px;
+			border: 1px solid rgba(148, 163, 184, 0.22);
+			border-radius: 16px;
+			background: rgba(15, 23, 42, 0.72);
+			color: var(--text);
+			outline: none;
+			font-size: 16px;
+		}
+
+		input:focus {
+			border-color: var(--accent);
+			box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.16);
+		}
+
+		.button-row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+		}
+
+		button {
+			border: none;
+			border-radius: 14px;
+			padding: 13px 16px;
+			font-size: 15px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+		}
+
+		button:hover {
+			transform: translateY(-1px);
+		}
+
+		.btn-primary {
+			background: linear-gradient(135deg, var(--accent), var(--accent-2));
+			color: white;
+			box-shadow: 0 14px 32px rgba(37, 99, 235, 0.28);
+		}
+
+		.btn-secondary {
+			background: rgba(148, 163, 184, 0.12);
+			color: var(--text);
+			border: 1px solid rgba(148, 163, 184, 0.18);
+		}
+
+		.btn-danger {
+			background: rgba(251, 113, 133, 0.14);
+			color: #fecdd3;
+			border: 1px solid rgba(251, 113, 133, 0.18);
+		}
+
+		.meta {
+			display: grid;
+			gap: 10px;
+			padding: 16px;
+			border-radius: 20px;
+			background: rgba(148, 163, 184, 0.08);
+			border: 1px solid rgba(148, 163, 184, 0.14);
+		}
+
+		.meta-line {
+			display: flex;
+			justify-content: space-between;
+			gap: 12px;
+			font-size: 14px;
+			color: #d4deee;
+		}
+
+		.meta-line span:last-child {
+			color: var(--muted);
+		}
+
+		.message {
+			min-height: 24px;
+			font-size: 14px;
+			color: var(--muted);
+		}
+
+		.message.success {
+			color: #86efac;
+		}
+
+		.message.alert {
+			color: #fda4af;
+		}
+
+		@media (max-width: 860px) {
+			.timer-shell {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 520px) {
+			.card {
+				padding: 20px;
+				border-radius: 22px;
+			}
+
+			.input-row {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="page">
+		<section class="card">
+			<div class="header">
+				<div>
+					<span class="badge">Countdown Timer</span>
+					<h1>Focus on one thing.</h1>
+					<p>Set a countdown, start the clock, and get a clean visual alert when time is up.</p>
+				</div>
+			</div>
+
+			<div class="timer-shell">
+				<div class="display-wrap">
+					<div class="ring" id="ring"></div>
+					<div class="time-display">
+						<div>
+							<strong id="timeText">25:00</strong>
+							<span id="stateText">Ready</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="controls">
+					<div class="input-row">
+						<div class="field">
+							<label for="minutes">Minutes</label>
+							<input id="minutes" type="number" min="0" max="999" value="25">
+						</div>
+						<div class="field">
+							<label for="seconds">Seconds</label>
+							<input id="seconds" type="number" min="0" max="59" value="0">
+						</div>
+					</div>
+
+					<div class="button-row">
+						<button class="btn-primary" type="button" id="startPauseBtn">Start</button>
+						<button class="btn-secondary" type="button" id="setBtn">Set Time</button>
+						<button class="btn-danger" type="button" id="resetBtn">Reset</button>
+					</div>
+
+					<div class="meta">
+						<div class="meta-line"><span>Mode</span><span id="modeText">Idle</span></div>
+						<div class="meta-line"><span>Remaining</span><span id="remainingText">25 minutes</span></div>
+						<div class="meta-line"><span>Progress</span><span id="progressText">0%</span></div>
+					</div>
+
+					<div class="message" id="message"></div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		const timeText = document.getElementById('timeText');
+		const stateText = document.getElementById('stateText');
+		const modeText = document.getElementById('modeText');
+		const remainingText = document.getElementById('remainingText');
+		const progressText = document.getElementById('progressText');
+		const message = document.getElementById('message');
+		const ring = document.getElementById('ring');
+		const startPauseBtn = document.getElementById('startPauseBtn');
+		const setBtn = document.getElementById('setBtn');
+		const resetBtn = document.getElementById('resetBtn');
+		const minutesInput = document.getElementById('minutes');
+		const secondsInput = document.getElementById('seconds');
+
+		let totalSeconds = 25 * 60;
+		let remainingSeconds = totalSeconds;
+		let timerId = null;
+		let running = false;
+
+		function clampNumber(value, min, max) {
+			const parsed = Number.parseInt(value, 10);
+			if (Number.isNaN(parsed)) {
+				return min;
+			}
+			return Math.min(Math.max(parsed, min), max);
+		}
+
+		function formatTime(seconds) {
+			const safeSeconds = Math.max(0, seconds);
+			const mins = Math.floor(safeSeconds / 60);
+			const secs = safeSeconds % 60;
+			return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+		}
+
+		function updateRing() {
+			const progress = totalSeconds === 0 ? 0 : 1 - remainingSeconds / totalSeconds;
+			const angle = Math.max(0, Math.min(360, progress * 360));
+			ring.style.background = `conic-gradient(var(--accent) 0deg, var(--accent-2) ${angle}deg, rgba(148, 163, 184, 0.16) ${angle}deg)`;
+			progressText.textContent = `${Math.round(progress * 100)}%`;
+		}
+
+		function syncControlsFromTime() {
+			const mins = Math.floor(remainingSeconds / 60);
+			const secs = remainingSeconds % 60;
+			minutesInput.value = String(mins);
+			secondsInput.value = String(secs);
+		}
+
+		function render() {
+			timeText.textContent = formatTime(remainingSeconds);
+			stateText.textContent = running ? 'Running' : 'Ready';
+			modeText.textContent = running ? 'Active' : 'Idle';
+			remainingText.textContent = `${Math.floor(remainingSeconds / 60)} minute${Math.floor(remainingSeconds / 60) === 1 ? '' : 's'} ${remainingSeconds % 60} second${remainingSeconds % 60 === 1 ? '' : 's'}`;
+			startPauseBtn.textContent = running ? 'Pause' : 'Start';
+			updateRing();
+		}
+
+		function clearTimer() {
+			if (timerId !== null) {
+				clearInterval(timerId);
+				timerId = null;
+			}
+		}
+
+		function beep() {
+			try {
+				const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+				if (!AudioContextClass) {
+					return;
+				}
+				const audioContext = new AudioContextClass();
+				const oscillator = audioContext.createOscillator();
+				const gainNode = audioContext.createGain();
+				oscillator.type = 'sine';
+				oscillator.frequency.value = 880;
+				gainNode.gain.value = 0.06;
+				oscillator.connect(gainNode);
+				gainNode.connect(audioContext.destination);
+				oscillator.start();
+				setTimeout(() => {
+					oscillator.stop();
+					audioContext.close();
+				}, 350);
+			} catch (error) {
+			}
+		}
+
+		function finishTimer() {
+			clearTimer();
+			running = false;
+			remainingSeconds = 0;
+			stateText.textContent = 'Finished';
+			modeText.textContent = 'Done';
+			message.textContent = 'Time is up.';
+			message.className = 'message success';
+			startPauseBtn.textContent = 'Start';
+			beep();
+			render();
+		}
+
+		function setTimerFromInputs() {
+			const mins = clampNumber(minutesInput.value, 0, 999);
+			const secs = clampNumber(secondsInput.value, 0, 59);
+			totalSeconds = (mins * 60) + secs;
+			remainingSeconds = totalSeconds;
+			running = false;
+			clearTimer();
+			message.textContent = totalSeconds === 0 ? 'Set a time greater than zero.' : 'Timer updated.';
+			message.className = totalSeconds === 0 ? 'message alert' : 'message success';
+			syncControlsFromTime();
+			render();
+		}
+
+		function startPauseTimer() {
+			if (totalSeconds === 0) {
+				setTimerFromInputs();
+				return;
+			}
+
+			if (remainingSeconds <= 0) {
+				remainingSeconds = totalSeconds;
+			}
+
+			running = !running;
+			message.textContent = running ? 'Timer started.' : 'Timer paused.';
+			message.className = 'message success';
+
+			if (running) {
+				clearTimer();
+				timerId = setInterval(() => {
+					remainingSeconds -= 1;
+					if (remainingSeconds <= 0) {
+						finishTimer();
+						return;
+					}
+					render();
+				}, 1000);
+			} else {
+				clearTimer();
+			}
+
+			render();
+		}
+
+		function resetTimer() {
+			clearTimer();
+			running = false;
+			remainingSeconds = totalSeconds;
+			message.textContent = 'Timer reset.';
+			message.className = 'message';
+			syncControlsFromTime();
+			render();
+		}
+
+		minutesInput.addEventListener('input', () => {
+			message.textContent = '';
+			message.className = 'message';
+		});
+
+		secondsInput.addEventListener('input', () => {
+			message.textContent = '';
+			message.className = 'message';
+		});
+
+		setBtn.addEventListener('click', setTimerFromInputs);
+		startPauseBtn.addEventListener('click', startPauseTimer);
+		resetBtn.addEventListener('click', resetTimer);
+
+		render();
+	</script>
+</body>
+</html>
+ 

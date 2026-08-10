@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Home | Login Flow</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+			background: linear-gradient(135deg, #0f172a 0%, #1e293b 45%, #334155 100%);
+			min-height: 100vh;
+			color: #e2e8f0;
+		}
+
+		.page {
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+		}
+
+		.card {
+			width: 100%;
+			max-width: 460px;
+			background: rgba(15, 23, 42, 0.82);
+			border: 1px solid rgba(148, 163, 184, 0.25);
+			border-radius: 24px;
+			padding: 34px;
+			box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+			backdrop-filter: blur(12px);
+		}
+
+		.badge {
+			display: inline-block;
+			padding: 8px 12px;
+			border-radius: 999px;
+			background: rgba(56, 189, 248, 0.15);
+			color: #7dd3fc;
+			font-size: 12px;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			margin-bottom: 18px;
+		}
+
+		h1, h2 {
+			margin: 0 0 12px;
+			line-height: 1.15;
+		}
+
+		h1 {
+			font-size: clamp(2rem, 5vw, 3.4rem);
+		}
+
+		p {
+			margin: 0 0 18px;
+			color: #cbd5e1;
+			line-height: 1.7;
+		}
+
+		.actions {
+			display: flex;
+			gap: 12px;
+			flex-wrap: wrap;
+			margin-top: 28px;
+		}
+
+		.btn {
+			border: none;
+			border-radius: 14px;
+			padding: 14px 18px;
+			font-size: 15px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+		}
+
+		.btn:hover {
+			transform: translateY(-1px);
+		}
+
+		.btn-primary {
+			background: linear-gradient(135deg, #38bdf8, #2563eb);
+			color: white;
+			box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
+		}
+
+		.btn-secondary {
+			background: rgba(148, 163, 184, 0.14);
+			color: #e2e8f0;
+			border: 1px solid rgba(148, 163, 184, 0.2);
+		}
+
+		.form-field {
+			margin-bottom: 16px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+			color: #cbd5e1;
+			font-size: 14px;
+		}
+
+		input {
+			width: 100%;
+			padding: 14px 16px;
+			border-radius: 14px;
+			border: 1px solid rgba(148, 163, 184, 0.28);
+			background: rgba(15, 23, 42, 0.7);
+			color: #f8fafc;
+			outline: none;
+		}
+
+		input:focus {
+			border-color: #38bdf8;
+			box-shadow: 0 0 0 3px rgba(56, 248, 248, 0.14);
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		.success {
+			margin-top: 16px;
+			padding: 12px 14px;
+			border-radius: 12px;
+			background: rgba(34, 197, 94, 0.12);
+			color: #86efac;
+			display: none;
+		}
+
+		@media (max-width: 480px) {
+			.card {
+				padding: 24px;
+				border-radius: 20px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="page">
+		<section class="card" id="homeScreen">
+			<span class="badge">Welcome</span>
+			<h1>Home Page</h1>
+			<p>This is the starting page. From here you can go to the login page, and after a successful login you will be taken to the registration page.</p>
+			<div class="actions">
+				<button class="btn btn-primary" type="button" onclick="showLogin()">Go to Login</button>
+				<button class="btn btn-secondary" type="button" onclick="goToRegistration()">Open Registration</button>
+			</div>
+		</section>
+
+		<section class="card hidden" id="loginScreen">
+			<span class="badge">Login</span>
+			<h2>Login Page</h2>
+			<p>Enter any demo email and password to continue to the registration page.</p>
+			<form onsubmit="return handleLogin(event)">
+				<div class="form-field">
+					<label for="email">Email</label>
+					<input type="email" id="email" placeholder="name@example.com" required>
+				</div>
+				<div class="form-field">
+					<label for="password">Password</label>
+					<input type="password" id="password" placeholder="Enter your password" required>
+				</div>
+				<div class="actions">
+					<button class="btn btn-primary" type="submit">Login</button>
+					<button class="btn btn-secondary" type="button" onclick="showHome()">Back Home</button>
+				</div>
+			</form>
+			<div class="success" id="loginMessage">Login successful. Redirecting to registration...</div>
+		</section>
+	</main>
+
+	<script src="db.js"></script>
+	<script>
+		const homeScreen = document.getElementById('homeScreen');
+		const loginScreen = document.getElementById('loginScreen');
+		const loginMessage = document.getElementById('loginMessage');
+
+		function showHome() {
+			homeScreen.classList.remove('hidden');
+			loginScreen.classList.add('hidden');
+			loginMessage.style.display = 'none';
+		}
+
+		function showLogin() {
+			homeScreen.classList.add('hidden');
+			loginScreen.classList.remove('hidden');
+			loginMessage.style.display = 'none';
+		}
+
+		function goToRegistration() {
+			window.location.href = 'a.html';
+		}
+
+		function handleLogin(event) {
+			event.preventDefault();
+			const email = document.getElementById('email').value.trim();
+			const password = document.getElementById('password').value;
+
+			window.dbHelpers.authenticateUser(email, password)
+				.then((result) => {
+					if (!result.ok) {
+						loginMessage.textContent = result.message;
+						loginMessage.style.background = 'rgba(239, 68, 68, 0.12)';
+						loginMessage.style.color = '#fca5a5';
+						loginMessage.style.display = 'block';
+						return;
+					}
+
+					loginMessage.textContent = 'Login successful. Redirecting to registration...';
+					loginMessage.style.background = 'rgba(34, 197, 94, 0.12)';
+					loginMessage.style.color = '#86efac';
+					loginMessage.style.display = 'block';
+
+					setTimeout(() => {
+						window.location.href = 'a.html';
+					}, 1200);
+				})
+				.catch(() => {
+					loginMessage.textContent = 'Database connection failed.';
+					loginMessage.style.background = 'rgba(239, 68, 68, 0.12)';
+					loginMessage.style.color = '#fca5a5';
+					loginMessage.style.display = 'block';
+				});
+			return false;
+		}
+	</script>
+</body>
+</html>
