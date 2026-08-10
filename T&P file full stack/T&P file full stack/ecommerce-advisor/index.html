@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopKart — India's Biggest Online Store</title>
+  <meta name="description" content="Shop electronics, fashion, home & kitchen, books and more at the lowest prices. Free delivery on orders above ₹499."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     TOP OFFER BAR
+══════════════════════════════════════════ -->
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <span>🎉 Big Billion Days Sale LIVE! Use code <strong>SHOPKART20</strong> for extra 20% off</span>
+    <div class="top-bar-links">
+      <a href="#">Sell on ShopKart</a>
+      <a href="#">Download App</a>
+      <a href="#">Customer Care</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════ -->
+<header class="header" id="main-header">
+  <div class="header-inner">
+
+    <!-- Logo -->
+    <a href="#" class="logo">
+      <span class="logo-shop">Shop</span><span class="logo-kart">Kart</span>
+      <span class="logo-tag">✦ India</span>
+    </a>
+
+    <!-- Location -->
+    <div class="location-box" onclick="toggleDropdown('location-drop')">
+      <span class="loc-icon">📍</span>
+      <div class="loc-text">
+        <span class="loc-label">Deliver to</span>
+        <span class="loc-city">Mumbai 400001 <span class="chevron">▾</span></span>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-wrap">
+      <div class="search-category" onclick="toggleDropdown('cat-drop')">
+        All <span>▾</span>
+        <div class="dropdown" id="cat-drop">
+          <a href="#">Electronics</a><a href="#">Fashion</a><a href="#">Home</a>
+          <a href="#">Books</a><a href="#">Toys</a><a href="#">Sports</a>
+          <a href="#">Beauty</a><a href="#">Grocery</a>
+        </div>
+      </div>
+      <input class="search-input" type="text" id="search-input" placeholder="Search for products, brands and more" autocomplete="off"/>
+      <button class="search-btn" onclick="handleSearch()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+      <div class="search-suggestions" id="search-suggestions"></div>
+    </div>
+
+    <!-- Header Right -->
+    <div class="header-right">
+
+      <!-- Account -->
+      <div class="hdr-btn account-btn" onclick="toggleDropdown('account-drop')">
+        <span class="hdr-icon">👤</span>
+        <div class="hdr-text">
+          <span class="hdr-label">Hello, Sign in</span>
+          <span class="hdr-main">Account &amp; Lists <span>▾</span></span>
+        </div>
+        <div class="dropdown" id="account-drop">
+          <div class="drop-header"><a href="#" class="drop-signin-btn">Sign In</a><br/><small>New customer? <a href="#">Start here</a></small></div>
+          <div class="drop-divider"></div>
+          <a href="#">Your Account</a><a href="#">Your Orders</a>
+          <a href="#">Wishlist</a><a href="#">Returns</a><a href="#">Sign Out</a>
+        </div>
+      </div>
+
+      <!-- Orders -->
+      <div class="hdr-btn" onclick="showToast('Opening your orders...')">
+        <span class="hdr-icon">📦</span>
+        <div class="hdr-text">
+          <span class="hdr-label">Returns &amp;</span>
+          <span class="hdr-main">Orders</span>
+        </div>
+      </div>
+
+      <!-- Wishlist -->
+      <div class="hdr-btn wishlist-btn" onclick="showToast('Opening Wishlist...')">
+        <span class="hdr-icon">♡</span>
+        <div class="hdr-text">
+          <span class="hdr-label">Saved</span>
+          <span class="hdr-main">Wishlist <span class="badge-count" id="wish-count">0</span></span>
+        </div>
+      </div>
+
+      <!-- Cart -->
+      <div class="hdr-btn cart-btn" onclick="toggleCart()">
+        <div class="cart-icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </div>
+        <span class="hdr-main cart-label">Cart</span>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════
+     NAVIGATION BAR
+══════════════════════════════════════════ -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a class="nav-link" href="#" onclick="filterCategory('all')">
+      <span>☰</span> All Categories
+    </a>
+    <a class="nav-link" href="#" onclick="filterCategory('electronics')">📱 Electronics</a>
+    <a class="nav-link" href="#" onclick="filterCategory('fashion')">👗 Fashion</a>
+    <a class="nav-link" href="#" onclick="filterCategory('home')">🏠 Home &amp; Kitchen</a>
+    <a class="nav-link" href="#" onclick="filterCategory('books')">📚 Books</a>
+    <a class="nav-link" href="#" onclick="filterCategory('sports')">⚽ Sports</a>
+    <a class="nav-link" href="#" onclick="filterCategory('beauty')">💄 Beauty</a>
+    <a class="nav-link" href="#" onclick="filterCategory('grocery')">🛒 Grocery</a>
+    <a class="nav-link deal-link" href="#deals-section">🔥 Today's Deals</a>
+    <a class="nav-link prime-link" href="#">⭐ ShopKart Prime</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════ -->
+<main class="main-content">
+
+  <!-- ─── HERO CAROUSEL ─── -->
+  <section class="hero-section">
+    <div class="carousel-wrap">
+      <div class="carousel" id="carousel">
+        <!-- Slide 1 -->
+        <div class="slide slide-1 active">
+          <div class="slide-content">
+            <div class="slide-text">
+              <div class="slide-tag">🎉 Big Billion Days</div>
+              <h1>Sale Starts Now!</h1>
+              <p>Up to <strong>80% OFF</strong> on Electronics, Fashion &amp; More</p>
+              <button class="slide-btn" onclick="filterCategory('all')">Shop Now →</button>
+            </div>
+            <div class="slide-visual">
+              <div class="slide-product-imgs">
+                <div class="sp-img sp-phone">📱</div>
+                <div class="sp-img sp-laptop">💻</div>
+                <div class="sp-img sp-watch">⌚</div>
+              </div>
+              <div class="slide-badge">80%<br/><small>OFF</small></div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="slide slide-2">
+          <div class="slide-content">
+            <div class="slide-text">
+              <div class="slide-tag">⚡ Flash Sale</div>
+              <h1>Electronics Fest</h1>
+              <p>Smartphones, Laptops &amp; Gadgets at <strong>Lowest Ever Prices</strong></p>
+              <button class="slide-btn" onclick="filterCategory('electronics')">Explore Now →</button>
+            </div>
+            <div class="slide-visual">
+              <div class="slide-product-imgs">
+                <div class="sp-img sp-headphone">🎧</div>
+                <div class="sp-img sp-tv">📺</div>
+                <div class="sp-img sp-camera">📷</div>
+              </div>
+              <div class="slide-badge">60%<br/><small>OFF</small></div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="slide slide-3">
+          <div class="slide-content">
+            <div class="slide-text">
+              <div class="slide-tag">👗 Fashion Week</div>
+              <h1>Style Your Life</h1>
+              <p>Top Brands, Latest Trends — <strong>Free Delivery</strong> on all orders</p>
+              <button class="slide-btn" onclick="filterCategory('fashion')">Shop Fashion →</button>
+            </div>
+            <div class="slide-visual">
+              <div class="slide-product-imgs">
+                <div class="sp-img sp-shoe">👟</div>
+                <div class="sp-img sp-bag">👜</div>
+                <div class="sp-img sp-shirt">👕</div>
+              </div>
+              <div class="slide-badge">70%<br/><small>OFF</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-btn prev" onclick="prevSlide()">❮</button>
+      <button class="carousel-btn next" onclick="nextSlide()">❯</button>
+      <div class="carousel-dots" id="carousel-dots">
+        <span class="dot active" onclick="goSlide(0)"></span>
+        <span class="dot" onclick="goSlide(1)"></span>
+        <span class="dot" onclick="goSlide(2)"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── DEALS OF THE DAY ─── -->
+  <section class="section deals-section" id="deals-section">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <h2 class="section-title">🔥 Deals of the Day</h2>
+        <span class="section-sub">Hurry — Limited time offers!</span>
+      </div>
+      <div class="countdown-wrap">
+        <span class="countdown-label">Ends in</span>
+        <div class="countdown">
+          <div class="time-box"><span id="cnt-h">08</span><small>HRS</small></div>
+          <span class="colon">:</span>
+          <div class="time-box"><span id="cnt-m">24</span><small>MIN</small></div>
+          <span class="colon">:</span>
+          <div class="time-box"><span id="cnt-s">00</span><small>SEC</small></div>
+        </div>
+      </div>
+      <a href="#" class="see-all-btn">See all deals →</a>
+    </div>
+
+    <div class="deals-grid" id="deals-grid">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <!-- ─── SHOP BY CATEGORY ─── -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">🛍️ Shop by Category</h2>
+      <a href="#" class="see-all-btn">Browse all →</a>
+    </div>
+    <div class="category-grid">
+      <a class="cat-card" href="#" onclick="filterCategory('electronics')">
+        <div class="cat-icon">📱</div>
+        <span>Electronics</span>
+      </a>
+      <a class="cat-card" href="#" onclick="filterCategory('fashion')">
+        <div class="cat-icon">👗</div>
+        <span>Fashion</span>
+      </a>
+      <a class="cat-card" href="#" onclick="filterCategory('home')">
+        <div class="cat-icon">🏠</div>
+        <span>Home &amp; Kitchen</span>
+      </a>
+      <a class="cat-card" href="#" onclick="filterCategory('books')">
+        <div class="cat-icon">📚</div>
+        <span>Books</span>
+      </a>
+      <a class="cat-card" href="#" onclick="filterCategory('sports')">
+        <div class="cat-icon">⚽</div>
+        <span>Sports</span>
+      </a>
+      <a class="cat-card" href="#" onclick="filterCategory('beauty')">
+        <div class="cat-icon">💄</div>
+        <span>Beauty</span>
+      </a>
+      <a class="cat-card" href="#" onclick="filterCategory('grocery')">
+        <div class="cat-icon">🛒</div>
+        <span>Grocery</span>
+      </a>
+      <a class="cat-card" href="#">
+        <div class="cat-icon">🧸</div>
+        <span>Toys &amp; Baby</span>
+      </a>
+      <a class="cat-card" href="#">
+        <div class="cat-icon">🏋️</div>
+        <span>Fitness</span>
+      </a>
+      <a class="cat-card" href="#">
+        <div class="cat-icon">🚗</div>
+        <span>Automotive</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── PRIME BANNER ─── -->
+  <section class="prime-banner">
+    <div class="prime-inner">
+      <div class="prime-left">
+        <span class="prime-star">⭐</span>
+        <div>
+          <h3>Try ShopKart Prime</h3>
+          <p>Free same-day delivery · Exclusive deals · Ad-free experience</p>
+        </div>
+      </div>
+      <button class="prime-btn" onclick="showToast('Welcome to Prime! 30-day free trial activated.')">Start 30-day Free Trial</button>
+    </div>
+  </section>
+
+  <!-- ─── TRENDING PRODUCTS ─── -->
+  <section class="section" id="products-section">
+    <div class="section-header">
+      <h2 class="section-title" id="products-heading">🌟 Trending Products</h2>
+      <!-- Filter pills -->
+      <div class="filter-pills">
+        <button class="pill active" onclick="sortProducts('popular', this)">Popular</button>
+        <button class="pill" onclick="sortProducts('priceLow', this)">Price: Low to High</button>
+        <button class="pill" onclick="sortProducts('priceHigh', this)">Price: High to Low</button>
+        <button class="pill" onclick="sortProducts('rating', this)">Top Rated</button>
+        <button class="pill" onclick="sortProducts('discount', this)">Best Discount</button>
+      </div>
+    </div>
+
+    <div class="products-grid" id="products-grid">
+      <!-- Injected by JS -->
+    </div>
+
+    <div class="load-more-wrap">
+      <button class="load-more-btn" id="load-more-btn" onclick="loadMoreProducts()">Load More Products</button>
+    </div>
+  </section>
+
+  <!-- ─── MINI BANNERS ─── -->
+  <section class="mini-banners">
+    <div class="mini-banner mb-blue" onclick="filterCategory('electronics')">
+      <div class="mb-emoji">💻</div>
+      <div><h4>Laptop Carnival</h4><p>Starting ₹19,999</p></div>
+      <span class="mb-arrow">→</span>
+    </div>
+    <div class="mini-banner mb-green" onclick="filterCategory('home')">
+      <div class="mb-emoji">🏠</div>
+      <div><h4>Home Makeover</h4><p>Up to 60% off</p></div>
+      <span class="mb-arrow">→</span>
+    </div>
+    <div class="mini-banner mb-orange" onclick="filterCategory('fashion')">
+      <div class="mb-emoji">👟</div>
+      <div><h4>Sneaker Store</h4><p>Top brands, best prices</p></div>
+      <span class="mb-arrow">→</span>
+    </div>
+    <div class="mini-banner mb-purple" onclick="filterCategory('beauty')">
+      <div class="mb-emoji">💄</div>
+      <div><h4>Beauty Bonanza</h4><p>Buy 2 Get 1 Free</p></div>
+      <span class="mb-arrow">→</span>
+    </div>
+  </section>
+
+  <!-- ─── NEW ARRIVALS ─── -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">✨ New Arrivals</h2>
+      <a href="#" class="see-all-btn">View all →</a>
+    </div>
+    <div class="products-grid" id="new-arrivals-grid">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════════════════════
+     CART SIDEBAR
+══════════════════════════════════════════ -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<aside class="cart-sidebar" id="cart-sidebar">
+  <div class="cart-header">
+    <h3>🛒 Your Cart (<span id="cart-item-count">0</span> items)</h3>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty" id="cart-empty">
+      <div style="font-size:3rem">🛒</div>
+      <p>Your cart is empty</p>
+      <small>Add items to get started</small>
+    </div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <span id="cart-total">₹0</span>
+    </div>
+    <div class="cart-savings" id="cart-savings"></div>
+    <button class="checkout-btn" onclick="showToast('Proceeding to checkout... 🎉')">
+      Proceed to Checkout →
+    </button>
+    <button class="continue-btn" onclick="toggleCart()">Continue Shopping</button>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════
+     PRODUCT MODAL
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+<div class="product-modal" id="product-modal">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <div class="modal-body" id="modal-body">
+    <!-- Injected by JS -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TOAST NOTIFICATION
+══════════════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-col">
+      <h4>Get to Know Us</h4>
+      <a href="#">About ShopKart</a>
+      <a href="#">Careers</a>
+      <a href="#">Press Releases</a>
+      <a href="#">ShopKart Science</a>
+      <a href="#">Investor Relations</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect With Us</h4>
+      <a href="#">Facebook</a>
+      <a href="#">Twitter</a>
+      <a href="#">Instagram</a>
+      <a href="#">YouTube</a>
+    </div>
+    <div class="footer-col">
+      <h4>Make Money With Us</h4>
+      <a href="#">Sell on ShopKart</a>
+      <a href="#">Become an Affiliate</a>
+      <a href="#">Advertise Your Products</a>
+      <a href="#">ShopKart Pay on Merchants</a>
+    </div>
+    <div class="footer-col">
+      <h4>ShopKart Payment Products</h4>
+      <a href="#">ShopKart Pay</a>
+      <a href="#">EMI on ShopKart</a>
+      <a href="#">ShopKart Gift Cards</a>
+      <a href="#">ShopKart Corporate Credit Line</a>
+    </div>
+    <div class="footer-col">
+      <h4>Let Us Help You</h4>
+      <a href="#">Your Account</a>
+      <a href="#">Your Orders</a>
+      <a href="#">Delivery Rates &amp; Policies</a>
+      <a href="#">Returns &amp; Replacements</a>
+      <a href="#">Manage Content</a>
+      <a href="#">Help</a>
+    </div>
+  </div>
+
+  <div class="footer-mid">
+    <div class="footer-logo">
+      <span class="logo-shop">Shop</span><span class="logo-kart">Kart</span>
+    </div>
+    <div class="footer-app">
+      <span>📱 Get the App</span>
+      <div class="app-badges">
+        <div class="app-badge" onclick="showToast('Redirecting to App Store...')">
+          <span>🍎</span> App Store
+        </div>
+        <div class="app-badge" onclick="showToast('Redirecting to Play Store...')">
+          <span>▶</span> Google Play
+        </div>
+      </div>
+    </div>
+    <div class="footer-payments">
+      <span>💳 Secure Payments</span>
+      <div class="payment-icons">
+        <span class="pay-icon">VISA</span>
+        <span class="pay-icon">MC</span>
+        <span class="pay-icon">UPI</span>
+        <span class="pay-icon">PayTM</span>
+        <span class="pay-icon">COD</span>
+        <span class="pay-icon">EMI</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2024 ShopKart.in · All rights reserved · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Sitemap</a></p>
+    <p>🇮🇳 India · English · ₹ INR · GST-inclusive pricing</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetroFlix | Cinema Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="hero-glow hero-glow-left"></div>
+    <div class="hero-glow hero-glow-right"></div>
+
+    <header class="topbar">
+        <div>
+            <p class="eyebrow">Your nearest cinema hall</p>
+            <h1>Book movies near you in minutes.</h1>
+        </div>
+        <a class="topbar-link" href="#booking">Reserve Now</a>
+    </header>
+
+    <main>
+        <section class="hero card">
+            <div class="hero-copy">
+                <span class="badge">Tonight's featured picks</span>
+                <h2>Choose a show, pick your seats, and book instantly.</h2>
+                <p>
+                    Discover the latest films playing at the cinema hall closest to you, compare shows, and secure your seats before they sell out.
+                </p>
+
+                <div class="hero-stats">
+                    <div>
+                        <strong>18</strong>
+                        <span>screens nearby</span>
+                    </div>
+                    <div>
+                        <strong>4.8/5</strong>
+                        <span>guest rating</span>
+                    </div>
+                    <div>
+                        <strong>2 min</strong>
+                        <span>average booking time</span>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="hero-panel">
+                <p class="panel-label">Nearest hall</p>
+                <h3>Galaxy Cinema Center</h3>
+                <p>2.1 km away • Mall Road, City Center</p>
+                <div class="panel-tags">
+                    <span>Dolby Atmos</span>
+                    <span>IMAX</span>
+                    <span>Parking</span>
+                </div>
+                <a class="primary-button" href="#booking">Explore shows</a>
+            </aside>
+        </section>
+
+        <section class="section-block">
+            <div class="section-heading">
+                <p class="eyebrow">Now showing</p>
+                <h2>Popular movies near your location</h2>
+            </div>
+
+            <div class="movie-grid">
+                <article class="movie-card card">
+                    <div class="movie-poster sunset">Action</div>
+                    <div class="movie-info">
+                        <div>
+                            <h3>Shadow Protocol</h3>
+                            <p>Thriller • 152 min</p>
+                        </div>
+                        <span class="rating">9.1</span>
+                    </div>
+                    <p class="movie-text">Fast-paced suspense with a cinematic soundtrack and premium evening showtimes.</p>
+                </article>
+
+                <article class="movie-card card">
+                    <div class="movie-poster ocean">Drama</div>
+                    <div class="movie-info">
+                        <div>
+                            <h3>Midnight Avenue</h3>
+                            <p>Drama • 138 min</p>
+                        </div>
+                        <span class="rating">8.7</span>
+                    </div>
+                    <p class="movie-text">An emotional story with matinee and evening sessions across nearby halls.</p>
+                </article>
+
+                <article class="movie-card card">
+                    <div class="movie-poster aurora">Family</div>
+                    <div class="movie-info">
+                        <div>
+                            <h3>Star Garden</h3>
+                            <p>Adventure • 126 min</p>
+                        </div>
+                        <span class="rating">8.9</span>
+                    </div>
+                    <p class="movie-text">A bright family adventure with premium recliner seating and weekend specials.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="booking" class="booking-layout">
+            <div class="card booking-form">
+                <div class="section-heading compact">
+                    <p class="eyebrow">Book tickets</p>
+                    <h2>Reserve your show</h2>
+                </div>
+
+                <form id="bookingForm">
+                    <label>
+                        Movie
+                        <select>
+                            <option>Shadow Protocol</option>
+                            <option>Midnight Avenue</option>
+                            <option>Star Garden</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Cinema hall
+                        <select>
+                            <option>Galaxy Cinema Center</option>
+                            <option>Sunrise Multiplex</option>
+                            <option>Neo Screen Plaza</option>
+                        </select>
+                    </label>
+
+                    <div class="form-row">
+                        <label>
+                            Date
+                            <input type="date" value="2026-08-10">
+                        </label>
+                        <label>
+                            Time
+                            <select>
+                                <option>12:30 PM</option>
+                                <option selected>04:45 PM</option>
+                                <option>08:15 PM</option>
+                                <option>10:40 PM</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <label>
+                        Seats
+                        <input id="seatCount" type="number" min="1" max="10" value="2">
+                    </label>
+
+                    <label>
+                        Contact number
+                        <input type="tel" placeholder="Enter your mobile number">
+                    </label>
+
+                    <button type="submit" class="primary-button full-width">Confirm booking</button>
+                </form>
+            </div>
+
+            <aside class="card summary-card">
+                <div class="section-heading compact">
+                    <p class="eyebrow">Summary</p>
+                    <h2>Your booking details</h2>
+                </div>
+
+                <div class="summary-item">
+                    <span>Hall</span>
+                    <strong>Galaxy Cinema Center</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Movie</span>
+                    <strong>Shadow Protocol</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Showtime</span>
+                    <strong>04:45 PM</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Seats</span>
+                    <strong>2 adults</strong>
+                </div>
+
+                <div class="price-box">
+                    <span>Total</span>
+                    <strong>$24.00</strong>
+                </div>
+
+                <p class="summary-note">You will receive an SMS and email confirmation after booking.</p>
+            </aside>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

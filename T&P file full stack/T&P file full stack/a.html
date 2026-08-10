@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Registration Form</title>
+
+    <style>
+        body {
+            background-color: #f8f7ff;
+            font-family: Arial, sans-serif;
+            color: #333333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #5c4b8a;
+        }
+
+        form {
+            width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 2px solid #d8d4f2;
+            border-radius: 10px;
+        }
+
+        label {
+            color: #4f4f6f;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #c8c8e8;
+            border-radius: 5px;
+            background-color: #fdfdff;
+            box-sizing: border-box;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            width: auto;
+        }
+
+        input[type="submit"] {
+            background-color: #9bbcf7;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 48%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="reset"] {
+            background-color: #d8b4f8;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 48%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #84a9e8;
+        }
+
+        input[type="reset"]:hover {
+            background-color: #c79ceb;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Student Registration Form</h2>
+
+    <form id="registrationForm">
+
+        <label>Full Name:</label><br>
+        <input type="text" name="fullname" required><br><br>
+
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br><br>
+
+        <label>Phone Number:</label><br>
+        <input type="tel" name="phone"><br><br>
+
+        <label>Gender:</label><br>
+        <input type="radio" name="gender" value="Male"> Male
+        <input type="radio" name="gender" value="Female"> Female
+        <input type="radio" name="gender" value="Other"> Other
+        <br><br>
+
+        <label>Date of Birth:</label><br>
+        <input type="date" name="dob"><br><br>
+
+        <label>Course:</label><br>
+        <select name="course">
+            <option>B.Tech</option>
+            <option>BCA</option>
+            <option>B.Sc</option>
+            <option>MCA</option>
+            <option>M.Tech</option>
+            <option>MBA</option>
+            <option>M.Sc</option>
+            <option>Diploma</option>
+        </select>
+        <br><br>
+
+        <label>Address:</label><br>
+        <textarea name="address" rows="4"></textarea><br><br>
+
+        <input type="checkbox" required> I agree to the Terms & Conditions.
+        <br><br>
+
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
+
+    </form>
+
+    <p id="statusMessage" style="width: 400px; margin: 16px auto 0; text-align: center; font-weight: bold;"></p>
+
+    <script src="db.js"></script>
+    <script>
+        const registrationForm = document.getElementById('registrationForm');
+        const statusMessage = document.getElementById('statusMessage');
+
+        registrationForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(registrationForm);
+            const user = {
+                fullname: formData.get('fullname').trim(),
+                email: formData.get('email').trim(),
+                password: formData.get('password'),
+                phone: formData.get('phone').trim(),
+                gender: formData.get('gender'),
+                dob: formData.get('dob'),
+                course: formData.get('course'),
+                address: formData.get('address').trim(),
+            };
+
+            try {
+                await window.dbHelpers.saveUser(user);
+                statusMessage.style.color = '#2563eb';
+                statusMessage.textContent = 'Registration saved to database successfully.';
+                registrationForm.reset();
+            } catch (error) {
+                statusMessage.style.color = '#dc2626';
+                statusMessage.textContent = 'Could not save registration data.';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

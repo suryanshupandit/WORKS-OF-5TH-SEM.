@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 700px;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .quiz-container {
+            display: none;
+        }
+
+        .quiz-container.active {
+            display: block;
+        }
+
+        .question-number {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+            font-size: 16px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .message {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .result-details {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .correct {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .btn-restart {
+            background: #667eea;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .btn-restart:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .start-screen p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 40px;
+            font-size: 18px;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Quiz Time</h1>
+
+        <!-- Start Screen -->
+        <div id="startScreen" class="start-screen">
+            <h2>Welcome to the Quiz!</h2>
+            <p>Test your knowledge with this interactive quiz. You'll have 10 questions covering various topics.</p>
+            <p><strong>Instructions:</strong> Select the correct answer for each question and click Next to proceed.</p>
+            <button class="btn-start" onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quizContainer">
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question" id="question"></div>
+
+            <div class="options" id="options"></div>
+
+            <div class="buttons">
+                <button class="btn-next" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="results" class="results">
+            <h2>Quiz Complete! 🎉</h2>
+            <div class="score" id="finalScore"></div>
+            <div class="message" id="message"></div>
+            <div class="result-details" id="resultDetails"></div>
+            <button class="btn-restart" onclick="restartQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What is the capital of France?",
+                options: ["London", "Paris", "Berlin", "Madrid"],
+                correct: 1
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                correct: 1
+            },
+            {
+                question: "What is the largest ocean on Earth?",
+                options: ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
+                correct: 2
+            },
+            {
+                question: "Who wrote 'Romeo and Juliet'?",
+                options: ["Mark Twain", "William Shakespeare", "Jane Austen", "Charles Dickens"],
+                correct: 1
+            },
+            {
+                question: "What is the chemical symbol for Gold?",
+                options: ["Go", "Gd", "Au", "Ag"],
+                correct: 2
+            },
+            {
+                question: "Which country is home to the kangaroo?",
+                options: ["New Zealand", "Australia", "South Africa", "Brazil"],
+                correct: 1
+            },
+            {
+                question: "What is the smallest prime number?",
+                options: ["0", "1", "2", "3"],
+                correct: 2
+            },
+            {
+                question: "Which is the longest river in the world?",
+                options: ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
+                correct: 1
+            },
+            {
+                question: "What is the main ingredient in guacamole?",
+                options: ["Tomato", "Avocado", "Lime", "Onion"],
+                correct: 1
+            },
+            {
+                question: "In what year did the Titanic sink?",
+                options: ["1912", "1920", "1905", "1898"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = [];
+
+        function startQuiz() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const question = quizData[currentQuestion];
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            document.getElementById('question').textContent = question.question;
+
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `
+                    <input type="radio" id="option${index}" name="answer" value="${index}" onchange="selectOption()">
+                    <label for="option${index}">${option}</label>
+                `;
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            updateProgressBar();
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function selectOption() {
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            const selected = document.querySelector('input[name="answer"]:checked');
+            if (!selected) return;
+
+            const answer = parseInt(selected.value);
+            answers.push({
+                question: quizData[currentQuestion].question,
+                userAnswer: quizData[currentQuestion].options[answer],
+                correctAnswer: quizData[currentQuestion].options[quizData[currentQuestion].correct],
+                isCorrect: answer === quizData[currentQuestion].correct
+            });
+
+            if (answer === quizData[currentQuestion].correct) {
+                score++;
+            }
+
+            currentQuestion++;
+
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function showResults() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('results').classList.add('active');
+
+            const percentage = Math.round((score / quizData.length) * 100);
+            document.getElementById('finalScore').textContent = `${score} / ${quizData.length}`;
+            document.getElementById('message').textContent = getResultMessage(percentage);
+
+            let resultHTML = '';
+            answers.forEach((answer, index) => {
+                const statusClass = answer.isCorrect ? 'correct' : 'incorrect';
+                const statusText = answer.isCorrect ? '✓ Correct' : '✗ Incorrect';
+                resultHTML += `
+                    <div class="result-item">
+                        <strong>Q${index + 1}: ${answer.question}</strong><br>
+                        Your answer: <span class="${statusClass}">${answer.userAnswer} ${statusText}</span><br>
+                        ${!answer.isCorrect ? `Correct answer: <span class="correct">${answer.correctAnswer}</span>` : ''}
+                    </div>
+                `;
+            });
+
+            document.getElementById('resultDetails').innerHTML = resultHTML;
+        }
+
+        function getResultMessage(percentage) {
+            if (percentage === 100) return "Perfect Score! You're a genius! 🌟";
+            if (percentage >= 80) return "Great Job! You know your stuff! 👏";
+            if (percentage >= 60) return "Good effort! Keep practicing! 📚";
+            if (percentage >= 40) return "Not bad! Study more and try again! 💪";
+            return "Keep learning! You'll do better next time! 🚀";
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answers = [];
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('results').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
